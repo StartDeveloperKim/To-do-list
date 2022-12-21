@@ -3,6 +3,7 @@ package project.todo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class UserController {
 
     private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
@@ -30,8 +32,9 @@ public class UserController {
             }
             User user = User.builder()
                     .username(userDTO.getUsername())
-                    .password(userDTO.getPassword())
+                    .password(bCryptPasswordEncoder.encode(userDTO.getPassword()))
                     .build();
+
             User registeredUser = userService.create(user);
             UserDTO responseUserDTO = UserDTO.builder()
                     .id(registeredUser.getId())
@@ -47,7 +50,7 @@ public class UserController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
-        User user = userService.getByCredentials(userDTO.getUsername(), userDTO.getPassword());
+        User user = userService.getByCredentials(userDTO.getUsername(), userDTO.getPassword(), bCryptPasswordEncoder);
 
         if (user != null) {
             final String token = tokenProvider.create(user);

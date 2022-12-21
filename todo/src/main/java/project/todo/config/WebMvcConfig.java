@@ -9,6 +9,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final long MAX_AGE_SECS = 3600;
 
+    // CORS(Cross Origin Resources Sharing) 설정
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // 모든 경로에 대해

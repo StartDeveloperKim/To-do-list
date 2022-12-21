@@ -2,6 +2,7 @@ package project.todo.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.todo.domain.entity.User;
 import project.todo.domain.repository.UserRepository;
@@ -26,7 +27,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User getByCredentials(final String username, final String password) {
-        return userRepository.findByUsernameAndPassword(username, password);
+    public User getByCredentials(final String username, final String password, final PasswordEncoder encoder) {
+        final User originalUser = userRepository.findByUsername(username);
+
+        if (originalUser != null && encoder.matches(password, originalUser.getPassword())) {
+            return originalUser;
+        }
+        return null;
     }
 }
