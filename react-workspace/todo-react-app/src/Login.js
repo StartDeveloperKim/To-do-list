@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Grid, Typography, TextField, Button, Link } from "@material-ui/core";
 import { signin } from "./ApiService";
+import { API_BASE_URL } from "./api-config";
 
 function Login() {
     const handleSubmit = (event) => {
@@ -11,6 +12,10 @@ function Login() {
 
         signin({ username: username, password: password });
     };
+
+    const handleSocialLogin = (provider) => {
+        window.location.href = API_BASE_URL + "/auth/authorize/" + provider
+    }
 
     return (
         <Container component="main" maxWidth="xs" style={{ marginTop: "8%" }}>
@@ -51,6 +56,11 @@ function Login() {
                     <Grid item xs={12}>
                         <Button type="submit" fullWidth variant="contained" color="primary">
                             로그인
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button fullWidth variant="contained" onClick={() => handleSocialLogin("github")}>
+                            깃허브로 로그인하기
                         </Button>
                     </Grid>
                 </Grid>

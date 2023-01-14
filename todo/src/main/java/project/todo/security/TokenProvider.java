@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import project.todo.domain.entity.User;
 
@@ -18,11 +19,11 @@ import java.util.Date;
 @Service
 @PropertySource("classpath:application-jwt.properties")
 public class TokenProvider {
-    private final String SECRET_KEY;
 
-    @Autowired
-    public TokenProvider(@Value("${jwt.secret}") String SECRET_KEY) {
-        this.SECRET_KEY = SECRET_KEY;
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
+
+    public TokenProvider() {
     }
 
     public String create(User user) {
@@ -38,6 +39,18 @@ public class TokenProvider {
                 .setIssuer("demo app")
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
+                .compact();
+    }
+
+    public String create(final Authentication authentication) {
+        ApplicationOAuth2User userPrincipal = (ApplicationOAuth2User) authentication.getPrincipal();
+        Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+
+        return Jwts.builder()
+                .setSubject(userPrincipal.getName())
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
     }
 

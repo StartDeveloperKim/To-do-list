@@ -37,3 +37,10 @@ out/
 .vscode/
 
 application-jwt.properties
+application-dev.yaml
+application-prod.yaml
+application-oauth.yaml
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
