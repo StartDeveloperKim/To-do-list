@@ -9,9 +9,9 @@ import java.util.Collections;
 import java.util.Map;
 
 public class ApplicationOAuth2User implements OAuth2User {
-    private String id;
-    private Collection<? extends GrantedAuthority> authorities;
-    private Map<String, Object> attributes;
+    private final String id;
+    private final Collection<? extends GrantedAuthority> authorities;
+    private final Map<String, Object> attributes;
 
     public ApplicationOAuth2User(String id, Map<String, Object> attributes) {
         this.id = id;

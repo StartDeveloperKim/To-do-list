@@ -14,7 +14,8 @@ function Login() {
     };
 
     const handleSocialLogin = (provider) => {
-        window.location.href = API_BASE_URL + "/auth/authorize/" + provider
+        const frontendUrl = window.location.protocol + "//" + window.location.host;
+        window.location.href = API_BASE_URL + "/auth/authorize/" + provider + "?redirect_url=" + frontendUrl;
     }
 
     return (
@@ -64,7 +65,7 @@ function Login() {
                         </Button>
                     </Grid>
                 </Grid>
-                <Grid container justify="flex-end">
+                <Grid container >
                     <Grid item>
                         <Link href="/signup" variant="body2">
                             계정이 없으시면 회원가입을 해주세요
